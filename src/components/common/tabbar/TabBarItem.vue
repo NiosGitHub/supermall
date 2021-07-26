@@ -44,6 +44,7 @@
 
 <style>
 .tab-bar-item {
+  /* 底部导航高度一般49px */
   height: 49px;
   font-size: 14px;
 }
@@ -51,8 +52,8 @@
 .tab-bar-item img {
   width: 24px;
   height: 24px;
-  /* margin-top: 3px;
-  margin-bottom: 3px; */
+  margin-top: 3px;
+  margin-bottom: 3px;
   vertical-align: middle;
 }
 </style>
