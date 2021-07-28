@@ -10,14 +10,15 @@
 </template>
 
 <script>
-import NavBar from "../../components/common/navbar/NavBar.vue";
-import TabControl from "../../components/content/tabControl/TabControl.vue";
-import GoodsList from "../../components/content/goods/GoodsList.vue";
+import NavBar from "components/common/navbar/NavBar.vue";
+import TabControl from "components/content/tabControl/TabControl.vue";
+import GoodsList from "components/content/goods/GoodsList.vue";
 
 import HomeSwiper from "./childComps/HomeSwiper.vue";
 import RecommendView from "./childComps/RecommendView.vue";
 import FeatureView from "./childComps/FeatureView.vue";
-import { getHomeMultidata, getHomeGoods } from "../../network/home";
+
+import { getHomeMultidata, getHomeGoods } from "network/home";
 
 export default {
   name: "Home",
