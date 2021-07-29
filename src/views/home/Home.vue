@@ -1,18 +1,27 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><template #center> 购物街 </template></nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view />
-    <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
-    <goods-list :goods="showGoods" />
+
+    <scroll class="content" ref="scroll">
+      <home-swiper :banners="banners"></home-swiper>
+      <recommend-view :recommends="recommends"></recommend-view>
+      <feature-view />
+      <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
+      <goods-list :goods="showGoods" />
+    </scroll>
+
+    <!-- click.native可以监听原生组件 -->
+    <back-top @click.native="backClick" />
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar.vue";
+import Scroll from "components/common/scroll/Scroll";
+
 import TabControl from "components/content/tabControl/TabControl.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
+import BackTop from "components/content/backTop/BackTop.vue";
 
 import HomeSwiper from "./childComps/HomeSwiper.vue";
 import RecommendView from "./childComps/RecommendView.vue";
@@ -24,8 +33,10 @@ export default {
   name: "Home",
   components: {
     NavBar,
+    Scroll,
     TabControl,
     GoodsList,
+    BackTop,
     HomeSwiper,
     RecommendView,
     FeatureView,
@@ -51,10 +62,10 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-  computed:{
-    showGoods(){
-      return this.goods[this.currentType].list
-    }
+  computed: {
+    showGoods() {
+      return this.goods[this.currentType].list;
+    },
   },
   methods: {
     /*
@@ -72,6 +83,9 @@ export default {
           this.currentType = "sell";
           break;
       }
+    },
+    backClick() {
+      this.$refs.scroll.scrollTo(0,0)
     },
 
     /*
@@ -96,9 +110,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #home {
   padding-top: 44px;
+  height: 100vh;
+  position: relative;
 }
 
 .home-nav {
@@ -116,5 +132,15 @@ export default {
   position: sticky;
   top: 44px;
   z-index: 999;
+}
+
+.content {
+  /* height: 300px; */
+  overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
 }
 </style>

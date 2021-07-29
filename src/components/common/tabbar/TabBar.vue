@@ -10,7 +10,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 #tab-bar {
   display: flex;
   justify-content: space-around;

@@ -42,7 +42,7 @@
   }
 </script>
 
-<style>
+<style >
 .tab-bar-item {
   /* 底部导航高度一般49px */
   height: 49px;

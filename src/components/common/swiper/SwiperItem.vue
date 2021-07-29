@@ -10,7 +10,7 @@
 	}
 </script>
 
-<style>
+<style >
   .slide {
     width: 100%;
     flex-shrink: 0;
