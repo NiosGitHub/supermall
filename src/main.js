@@ -2,20 +2,12 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
+import bus from './bus'
 
-createApp(App).use(store).use(router).mount('#app')
+const app=createApp(App)
 
-// const win = window
-
-// if (process.env.NODE_ENV === 'development') {
-
-//     if ('__VUE_DEVTOOLS_GLOBAL_HOOK__' in win) {
-
-//         win.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue = app
-
-//     }
-
-// }
+app.use(store).use(router).mount('#app')
+app.config.globalProperties.$bus=bus
 
 
 

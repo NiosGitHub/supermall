@@ -2,7 +2,13 @@
   <div id="home">
     <nav-bar class="home-nav"><template #center> 购物街 </template></nav-bar>
 
-    <scroll class="content" ref="scroll">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      :pull-up-load="true"
+      @scroll="contentScroll"
+    >
       <home-swiper :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
@@ -11,7 +17,7 @@
     </scroll>
 
     <!-- click.native可以监听原生组件 -->
-    <back-top @click.native="backClick" />
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -52,6 +58,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
+      isShowBackTop: false,
     };
   },
   created() {
@@ -61,6 +68,12 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+  },
+  mounted() {
+     // 3.监听item中图片加载完成
+    this.$bus.$on("itemImageLoad", () => {
+      this.$refs.scroll.refresh();
+    });
   },
   computed: {
     showGoods() {
@@ -85,7 +98,11 @@ export default {
       }
     },
     backClick() {
-      this.$refs.scroll.scrollTo(0,0)
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    // backtop按钮的显示和隐藏
+    contentScroll(position) {
+      this.isShowBackTop = -position.y > 1000;
     },
 
     /*
@@ -93,7 +110,6 @@ export default {
     */
     getHomeMultidata() {
       getHomeMultidata().then((res) => {
-        //   this.result = res;
         this.banners = res.data.banner.list;
         this.recommends = res.data.recommend.list;
       });
@@ -135,7 +151,6 @@ export default {
 }
 
 .content {
-  /* height: 300px; */
   overflow: hidden;
   position: absolute;
   top: 44px;
