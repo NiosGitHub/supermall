@@ -15,7 +15,7 @@
     <div class="info-detail">
       <p>{{ commentInfo.content }}</p>
       <div class="info-other">
-        <span class="date">{{ commentInfo.created | showDate }}</span>
+        <span class="date">{{ showDate(commentInfo.created) }}</span>
         <span>{{ commentInfo.style }}</span>
       </div>
       <div class="info-imgs">
@@ -41,8 +41,9 @@ export default {
       },
     },
   },
-  filters: {
-    showDate(value) {
+  // vue3淘汰了过滤器，推荐写在计算属性或方法中
+  methods: {
+     showDate(value) {
       const date = new Date(value * 1000);
       return formatDate(date, "yyyy-MM-dd hh:mm:ss");
     },

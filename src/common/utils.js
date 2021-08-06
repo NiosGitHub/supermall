@@ -1,3 +1,5 @@
+
+// 防抖函数
 export function debounce(func, delay) {
     let timer = null;
 
@@ -10,6 +12,7 @@ export function debounce(func, delay) {
     };
 }
 
+// 将时间戳返回成正常的时间显示
 export function formatDate(date, fmt) {
     if (/(y+)/.test(fmt)) {
         fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));

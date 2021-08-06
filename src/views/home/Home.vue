@@ -42,7 +42,7 @@ import FeatureView from "./childComps/FeatureView.vue";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
-import { debounce } from "common/utils";
+import { itemListenerMixin } from "common/mixin.js";
 
 export default {
   name: "Home",
@@ -56,6 +56,7 @@ export default {
     RecommendView,
     FeatureView,
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -82,12 +83,13 @@ export default {
     this.getHomeGoods("sell");
   },
   mounted() {
-    // 1.监听item中图片加载完成
-    const refresh = debounce(this.$refs.scroll.refresh, 50);
-
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
+    // // 1.监听item中图片加载完成
+    // const refresh = debounce(this.$refs.scroll.refresh, 50);
+    // // 对监听的事件进行保存
+    // this.itemImgListener = () => {
+    //   refresh();
+    // };
+    // this.$bus.$on("itemImageLoad", this.itemImgListener);
   },
   destroyed() {
     console.log("home destoryed");
@@ -97,7 +99,11 @@ export default {
     this.$refs.scroll.refresh();
   },
   deactivated() {
+    // 1.保存Y值
     this.saveY = this.$refs.scroll.scroll.y;
+
+    // 2.取消全局事件的监听
+    this.$bus.$off("itemImageLoad", this.itemIamgeListener);
   },
   computed: {
     showGoods() {

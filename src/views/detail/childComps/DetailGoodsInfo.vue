@@ -11,7 +11,6 @@
         v-for="(item, index) in detailInfo.detailImage[0].list"
         :key="index"
         :src="item"
-        alt=""
         @load="imgLoad"
       />
     </div>
@@ -23,27 +22,12 @@ export default {
   name: "DetailGoodsInfo",
   props: {
     detailInfo: {
-      type: Object
+      type: Object,
     },
-  },
-  data() {
-    return {
-      counter: 0,
-      imagesLength: 0,
-    };
   },
   methods: {
     imgLoad() {
-      // 判断所有的图片都加载完了，进行一次回调
-      if (++this.counter === this.imagesLength) {
-        this.$emit("imageload");
-      }
-    },
-  },
-  // 监听数据的变换
-  watch: {
-    detailInfo() {
-      this.imagesLength = this.detailInfo.detailImage[0].list.length;
+      this.$emit("imageload");
     },
   },
 };
