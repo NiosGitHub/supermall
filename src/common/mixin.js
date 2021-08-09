@@ -1,5 +1,6 @@
 
 import { debounce } from "common/utils";
+import BackTop from "components/content/backTop/BackTop.vue";
 
 export const itemListenerMixin = {
     data() {
@@ -14,5 +15,21 @@ export const itemListenerMixin = {
             this.newRefresh();
         };
         this.$bus.$on("itemImageLoad", this.itemIamgeListener);
+    },
+}
+
+export const backTopMixin={
+    components:{
+        BackTop,
+    },
+    data() {
+        return {
+            isShowBackTop: false,
+        }
+    },
+    methods: {
+        backClick() {
+            this.$refs.scroll.scrollTo(0, 0);
+          },
     },
 }

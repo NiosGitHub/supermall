@@ -34,7 +34,6 @@ import Scroll from "components/common/scroll/Scroll";
 
 import TabControl from "components/content/tabControl/TabControl.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
-import BackTop from "components/content/backTop/BackTop.vue";
 
 import HomeSwiper from "./childComps/HomeSwiper.vue";
 import RecommendView from "./childComps/RecommendView.vue";
@@ -42,7 +41,7 @@ import FeatureView from "./childComps/FeatureView.vue";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
-import { itemListenerMixin } from "common/mixin.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
 export default {
   name: "Home",
@@ -51,12 +50,11 @@ export default {
     Scroll,
     TabControl,
     GoodsList,
-    BackTop,
     HomeSwiper,
     RecommendView,
     FeatureView,
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banners: [],
@@ -68,7 +66,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isShowBackTop: false,
+
       tabOffSetTop: 0,
       isTabFixed: false,
       saveY: 0,
@@ -128,9 +126,6 @@ export default {
       }
       this.$refs.tabControl_1.currentIndex = index;
       this.$refs.tabControl_2.currentIndex = index;
-    },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
     },
     // backtop按钮的显示和隐藏
     contentScroll(position) {

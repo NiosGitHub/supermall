@@ -4,7 +4,7 @@ import getters from './getters'
 import actions from './actions'
 
 const state={
-
+  cartList:[]
 }
 
 const store = new createStore({

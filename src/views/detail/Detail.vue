@@ -10,6 +10,9 @@
       <detail-comment-info :commentInfo="commentInfo" ref="comment" />
       <goods-list :goods="recommends" ref="recommends" />
     </scroll>
+    <detail-bottom-bar @addCart="addToCart" />
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
+    <toast :message="message" :isShow="isShow"/>
   </div>
 </template>
 
@@ -21,12 +24,16 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
+import DetailBottomBar from "./childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
+import Toast from "components/common/toast/Toast"
 
-import { itemListenerMixin } from "common/mixin.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 import { debounce } from "common/utils";
+
+import { ADD_CART } from "store/mutations-types";
 
 import {
   getDetail,
@@ -46,10 +53,12 @@ export default {
     DetailCommentInfo,
     DetailGoodsInfo,
     DetailParamInfo,
+    DetailBottomBar,
     Scroll,
     GoodsList,
+    Toast
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       iid: null,
@@ -63,6 +72,8 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: 0,
+      isShow:false,
+      message:'',
     };
   },
   created() {
@@ -72,6 +83,14 @@ export default {
     this.getDetail(this.iid);
     // 3.请求推荐数据
     this.getRecommend();
+    // 4.给GetThemeTopY赋值(对this.themeTopYs赋值操作进行防抖)
+    this.getThemeTopY = debounce(() => {
+      this.themeTopYs = [];
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommends.$el.offsetTop);
+    }, 200);
   },
   destroyed() {
     this.$bus.$off("itemImageLoad", this.itemIamgeListener);
@@ -118,18 +137,11 @@ export default {
       this.newRefresh();
     },
     titleClick(index) {
-      // 4.给GetThemeTopY赋值(对this.themeTopYs赋值操作进行防抖)
-      this.getThemeTopY = debounce(() => {
-        this.themeTopYs = [];
-        this.themeTopYs.push(0);
-        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
-        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-        this.themeTopYs.push(this.$refs.recommends.$el.offsetTop);
-      }, 200);
       this.getThemeTopY();
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200);
     },
     contentScroll(position) {
+      // 1
       const positionY = -position.y;
       let length = this.themeTopYs.length;
       for (let i = 0; i < length; i++) {
@@ -144,6 +156,29 @@ export default {
           this.$refs.nav.currentIndex = this.currentIndex;
         }
       }
+
+      // 2.判断backtop是否显示
+      this.isShowBackTop = -position.y > 1000;
+    },
+    addToCart() {
+      // 1.获取商品购物车需要展示信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+
+      // 2.将商品加入到购物车(mapActions,Actions可以返回一个Promise)
+      this.$store.dispatch(ADD_CART, product).then(res=>{
+        this.isShow=true,
+        this.message=res,
+
+        setTimeout(() => {
+          this.isShow=false
+          this.message=''
+        }, 2000);
+      });
     },
   },
 };
@@ -164,7 +199,7 @@ export default {
 }
 
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 50px);
   overflow: hidden;
 }
 </style>
